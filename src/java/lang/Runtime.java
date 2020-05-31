@@ -44,7 +44,7 @@ import sun.reflect.Reflection;
  */
 
 public class Runtime {
-    private static Runtime currentRuntime = new Runtime();
+    private static Runtime currentRuntime = new Runtime();  //单例模式的饿汉实现
 
     /**
      * Returns the runtime object associated with the current Java application.
@@ -58,7 +58,7 @@ public class Runtime {
         return currentRuntime;
     }
 
-    /** Don't let anyone else instantiate this class */
+    /** Don't let anyone else instantiate this class 不然其他类实例化这个类 */
     private Runtime() {}
 
     /**

@@ -218,10 +218,10 @@ public class ArrayList<E> extends AbstractList<E>
             ensureExplicitCapacity(minCapacity);
         }
     }
-
+    // 确认 内部容量 足够
     private void ensureCapacityInternal(int minCapacity) {
-        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
+        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) { //如果元素数组为默认空数组
+            minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity); //取最大值
         }
 
         ensureExplicitCapacity(minCapacity);
@@ -231,8 +231,8 @@ public class ArrayList<E> extends AbstractList<E>
         modCount++;
 
         // overflow-conscious code
-        if (minCapacity - elementData.length > 0)
-            grow(minCapacity);
+        if (minCapacity - elementData.length > 0) //如果加入新元素后的长度 超出了现有数组长度
+            grow(minCapacity);//给数组扩容
     }
 
     /**
@@ -252,7 +252,7 @@ public class ArrayList<E> extends AbstractList<E>
     private void grow(int minCapacity) {
         // overflow-conscious code
         int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        int newCapacity = oldCapacity + (oldCapacity >> 1); // 右移运算  (x >> 1 == x / 2的1次方)
         if (newCapacity - minCapacity < 0)
             newCapacity = minCapacity;
         if (newCapacity - MAX_ARRAY_SIZE > 0)
@@ -454,9 +454,9 @@ public class ArrayList<E> extends AbstractList<E>
      * @param e element to be appended to this list
      * @return <tt>true</tt> (as specified by {@link Collection#add})
      */
-    public boolean add(E e) {
-        ensureCapacityInternal(size + 1);  // Increments modCount!!
-        elementData[size++] = e;
+    public boolean add(E e) {//e是传入的元素
+        ensureCapacityInternal(size + 1);  // Increments modCount!!  size是当前元素的个数
+        elementData[size++] = e; //正式添加元素到object数组中
         return true;
     }
 

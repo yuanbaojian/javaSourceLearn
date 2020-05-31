@@ -232,17 +232,17 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     /**
      * The default initial capacity - MUST be a power of two.
      */
-    static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+    static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16  默认初始容量
 
     /**
      * The maximum capacity, used if a higher value is implicitly specified
      * by either of the constructors with arguments.
-     * MUST be a power of two <= 1<<30.
+     * MUST be a power of two <= 1<<30.  必须小于 2的30次方
      */
-    static final int MAXIMUM_CAPACITY = 1 << 30;
+    static final int MAXIMUM_CAPACITY = 1 << 30;   //最大容量   2的30次方
 
     /**
-     * The load factor used when none specified in constructor.
+     * The load factor used when none specified in constructor. 控制数组存放数据的疏密程度， 越接近1，数组中存放的数据越多
      */
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
@@ -335,7 +335,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      */
     static final int hash(Object key) {
         int h;
-        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16); // 计算key的hashCode 和
     }
 
     /**
@@ -406,7 +406,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     transient int size;
 
     /**
-     * The number of times this HashMap has been structurally modified
+     * The number of times this HashMap has been structurally modified  hashMap结构修改次数
      * Structural modifications are those that change the number of mappings in
      * the HashMap or otherwise modify its internal structure (e.g.,
      * rehash).  This field is used to make iterators on Collection-views of
@@ -472,7 +472,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * (16) and the default load factor (0.75).
      */
     public HashMap() {
-        this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
+        this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted  设置加载因子 ，默认0.75f
     }
 
     /**
@@ -607,8 +607,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      *         (A <tt>null</tt> return can also indicate that the map
      *         previously associated <tt>null</tt> with <tt>key</tt>.)
      */
-    public V put(K key, V value) {
-        return putVal(hash(key), key, value, false, true);
+    public V put(K key, V value) {  //put方法，将对象放入hashMap中，  使用泛型
+        return putVal(hash(key), key, value, false, true);//存放数据
     }
 
     /**
@@ -617,21 +617,21 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @param hash hash for key
      * @param key the key
      * @param value the value to put
-     * @param onlyIfAbsent if true, don't change existing value
-     * @param evict if false, the table is in creation mode.
+     * @param onlyIfAbsent if true, don't change existing value 如果为true，则替换不改变已有key的值。 默认为false ,直接覆盖
+     * @param evict if false, the table is in creation mode.  如果是false，是初始化初始化调用
      * @return previous value, or null if none
      */
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
         Node<K,V>[] tab; Node<K,V> p; int n, i;
-        if ((tab = table) == null || (n = tab.length) == 0)
-            n = (tab = resize()).length;
-        if ((p = tab[i = (n - 1) & hash]) == null)
-            tab[i] = newNode(hash, key, value, null);
-        else {
-            Node<K,V> e; K k;
+        if ((tab = table) == null || (n = tab.length) == 0) //table 为null 或者 长度为0---- 当前hashMap为空
+            n = (tab = resize()).length;  //进行数组扩容，长度设置为16
+        if ((p = tab[i = (n - 1) & hash]) == null) //确定元素放到哪个“哈希桶”里， (n - 1) & hash
+            tab[i] = newNode(hash, key, value, null); //“哈希桶”为空，直接放入
+        else {  //“桶”不为空
+            Node<K,V> e; K k;  //新建节点
             if (p.hash == hash &&
-                ((k = p.key) == key || (key != null && key.equals(k))))
+                ((k = p.key) == key || (key != n ull && key.equals(k))))
                 e = p;
             else if (p instanceof TreeNode)
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
@@ -657,10 +657,10 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                 return oldValue;
             }
         }
-        ++modCount;
-        if (++size > threshold)
-            resize();
-        afterNodeInsertion(evict);
+        ++modCount;  //“修改次数”加一
+        if (++size > threshold) //实际元素长度 大于 阈值
+            resize(); //扩容
+        afterNodeInsertion(evict); //插入元素后，回调函数
         return null;
     }
 

@@ -1,5 +1,6 @@
 package studyDemo.hashMap;
 
+
 import java.util.HashMap;
 
 /**
@@ -9,11 +10,12 @@ import java.util.HashMap;
  * @Param $
  * @return $
  **/
-public class HashCodeDemo1 {
+public class HashMapeDemo {
 
     public static void main(String[] args) {
         HashMap hashMap = new HashMap();
         hashMap.put("hello", "world");
+        hashMap.put("hello", "world2");
         System.out.println("hashMap = " + hashMap);
     }
 }
