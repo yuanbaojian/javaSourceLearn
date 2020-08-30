@@ -1536,7 +1536,7 @@ public final class String
      * (Unicode code units).
      *
      * @param   ch          a character (Unicode code point).
-     * @param   fromIndex   the index to start the search from.
+     * @param   fromIndex   the index to start the search from.  开始匹配的位置
      * @return  the index of the first occurrence of the character in the
      *          character sequence represented by this object that is greater
      *          than or equal to {@code fromIndex}, or {@code -1}
@@ -1544,9 +1544,9 @@ public final class String
      */
     public int indexOf(int ch, int fromIndex) {
         final int max = value.length;
-        if (fromIndex < 0) {
+        if (fromIndex < 0) {  // 为负数，则重置为0
             fromIndex = 0;
-        } else if (fromIndex >= max) {
+        } else if (fromIndex >= max) { //超过最大长度（这个string变量的长度）
             // Note: fromIndex might be near -1>>>1.
             return -1;
         }
@@ -1555,7 +1555,7 @@ public final class String
             // handle most cases here (ch is a BMP code point or a
             // negative value (invalid code point))
             final char[] value = this.value;
-            for (int i = fromIndex; i < max; i++) {
+            for (int i = fromIndex; i < max; i++) {  //遍历char数组
                 if (value[i] == ch) {
                     return i;
                 }

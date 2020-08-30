@@ -177,7 +177,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * removal or resizing) they are converted back to plain bins.  In
      * usages with well-distributed user hashCodes, tree bins are
      * rarely used.  Ideally, under random hashCodes, the frequency of
-     * nodes in bins follows a Poisson distribution
+     * nodes in bins follows a Poisson distribution   泊松分布
      * (http://en.wikipedia.org/wiki/Poisson_distribution) with a
      * parameter of about 0.5 on average for the default resizing
      * threshold of 0.75, although with a large variance because of
@@ -232,7 +232,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     /**
      * The default initial capacity - MUST be a power of two.
      */
-    static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16  默认初始容量
+    static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16  默认初始容量  1 * 2的4次方。 这个是哈西桶的数量，必须是2的n次方
 
     /**
      * The maximum capacity, used if a higher value is implicitly specified
@@ -552,8 +552,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @see #put(Object, Object)
      */
     public V get(Object key) {
-        Node<K,V> e;
-        return (e = getNode(hash(key), key)) == null ? null : e.value;
+        Node<K,V> e; //声明一个节点
+        return (e = getNode(hash(key), key)) == null ? null : e.value;  // 向getNode传递hash函数的值和key
     }
 
     /**
@@ -626,21 +626,21 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         Node<K,V>[] tab; Node<K,V> p; int n, i;
         if ((tab = table) == null || (n = tab.length) == 0) //table 为null 或者 长度为0---- 当前hashMap为空
             n = (tab = resize()).length;  //进行数组扩容，长度设置为16
-        if ((p = tab[i = (n - 1) & hash]) == null) //确定元素放到哪个“哈希桶”里， (n - 1) & hash
+        if ((p = tab[i = (n - 1) & hash]) == null) //确定元素放到哪个“哈希桶”里， (n - 1) & hash （与操作）
             tab[i] = newNode(hash, key, value, null); //“哈希桶”为空，直接放入
-        else {  //“桶”不为空
+        else {  //“哈希桶”不为空，发生了碰撞
             Node<K,V> e; K k;  //新建节点
             if (p.hash == hash &&
-                ((k = p.key) == key || (key != n ull && key.equals(k))))
+                ((k = p.key) == key || (key != null && key.equals(k))))  // 哈西桶一致，key一致， 直接覆盖value
                 e = p;
-            else if (p instanceof TreeNode)
+            else if (p instanceof TreeNode) //哈西桶上是 红黑树，进行树节点的插入
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
-            else {
+            else {  //哈西桶上是链表
                 for (int binCount = 0; ; ++binCount) {
                     if ((e = p.next) == null) {
                         p.next = newNode(hash, key, value, null);
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
-                            treeifyBin(tab, hash);
+                            treeifyBin(tab, hash);  //如果到达阈值，那么则树化
                         break;
                     }
                     if (e.hash == hash &&
@@ -659,12 +659,12 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         }
         ++modCount;  //“修改次数”加一
         if (++size > threshold) //实际元素长度 大于 阈值
-            resize(); //扩容
+            resize(); //扩容操作
         afterNodeInsertion(evict); //插入元素后，回调函数
         return null;
     }
 
-    /**
+    /**  初始化或者给数组扩容
      * Initializes or doubles table size.  If null, allocates in
      * accord with initial capacity target held in field threshold.
      * Otherwise, because we are using power-of-two expansion, the
@@ -683,7 +683,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                 threshold = Integer.MAX_VALUE;
                 return oldTab;
             }
-            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY && //新的容量变为之前的两倍
                      oldCap >= DEFAULT_INITIAL_CAPACITY)
                 newThr = oldThr << 1; // double threshold
         }
@@ -711,9 +711,9 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                         newTab[e.hash & (newCap - 1)] = e;
                     else if (e instanceof TreeNode)
                         ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
-                    else { // preserve order
-                        Node<K,V> loHead = null, loTail = null;
-                        Node<K,V> hiHead = null, hiTail = null;
+                    else { // preserve order   保持顺序， 就是这里多线程不安全
+                        Node<K,V> loHead = null, loTail = null;  //低位链表
+                        Node<K,V> hiHead = null, hiTail = null;  //高位链表
                         Node<K,V> next;
                         do {
                             next = e.next;
@@ -1433,8 +1433,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         final Node<K,V> nextNode() {
             Node<K,V>[] t;
             Node<K,V> e = next;
-            if (modCount != expectedModCount)
-                throw new ConcurrentModificationException();
+            if (modCount != expectedModCount)   //  实际被修改的次数 != 期望被修改的次数
+                throw new ConcurrentModificationException();  //  hashmap多线程下可能发生的异常
             if (e == null)
                 throw new NoSuchElementException();
             if ((next = (current = e).next) == null && (t = table) != null) {
