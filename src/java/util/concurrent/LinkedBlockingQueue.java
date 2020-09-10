@@ -247,7 +247,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
      * {@link Integer#MAX_VALUE}.
      */
     public LinkedBlockingQueue() {
-        this(Integer.MAX_VALUE);
+        this(Integer.MAX_VALUE);  //大小近乎于无界
     }
 
     /**
