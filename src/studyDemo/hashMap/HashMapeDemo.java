@@ -2,6 +2,8 @@ package studyDemo.hashMap;
 
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author hashCodeDemo1
@@ -13,9 +15,15 @@ import java.util.HashMap;
 public class HashMapeDemo {
 
     public static void main(String[] args) {
-        HashMap hashMap = new HashMap();
+        Map<String,String> hashMap = new HashMap();
         hashMap.put("hello", "world");
         hashMap.put("hello", "world2");
-        System.out.println("hashMap = " + hashMap);
+        hashMap.put("stringKey", "world2");
+        hashMap.get("hello");
+        // String orDefault = hashMap.getOrDefault("stringKey", "stringValue");
+        // System.out.println("orDefault = " + orDefault);
+
+        ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap<>();
+        concurrentHashMap.put("a","a");
     }
 }

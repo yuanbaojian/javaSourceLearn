@@ -607,7 +607,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      *         (A <tt>null</tt> return can also indicate that the map
      *         previously associated <tt>null</tt> with <tt>key</tt>.)
      */
-    public V put(K key, V value) {  //put方法，将对象放入hashMap中，  使用泛型
+    public V put(K key, V value) {  //put方法，将对象放入hashMap中，  使用泛型(k extends object)
+        System.out.println("key = " + key);
         return putVal(hash(key), key, value, false, true);//存放数据
     }
 
@@ -626,7 +627,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         Node<K,V>[] tab; Node<K,V> p; int n, i;
         if ((tab = table) == null || (n = tab.length) == 0) //table 为null 或者 长度为0---- 当前hashMap为空
             n = (tab = resize()).length;  //进行数组扩容，长度设置为16
-        if ((p = tab[i = (n - 1) & hash]) == null) //确定元素放到哪个“哈希桶”里， (n - 1) & hash （与操作）
+        if ((p = tab[i = (n - 1) & hash]) == null) // 确定元素放到哪个“哈希桶”里， (n - 1) & hash （与操作），再判断当前下标哈系统桶否为空。这里会发生并发问题
             tab[i] = newNode(hash, key, value, null); //“哈希桶”为空，直接放入
         else {  //“哈希桶”不为空，发生了碰撞
             Node<K,V> e; K k;  //新建节点
@@ -1049,7 +1050,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     }
 
     // Overrides of JDK8 Map extension methods
-
+    //getOrDefault方法， 如果key不存在，则返回defaultValue， 存在就返回key
     @Override
     public V getOrDefault(Object key, V defaultValue) {
         Node<K,V> e;
