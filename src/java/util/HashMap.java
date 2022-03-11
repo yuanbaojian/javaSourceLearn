@@ -675,18 +675,18 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * @return the table
      */
     final Node<K,V>[] resize() {
-        Node<K,V>[] oldTab = table;
+        Node<K,V>[] oldTab = table; //用于存储旧数据
         int oldCap = (oldTab == null) ? 0 : oldTab.length;
-        int oldThr = threshold;
-        int newCap, newThr = 0;
+        int oldThr = threshold;   // 保存旧阈值
+        int newCap, newThr = 0;  //新容量  新阈值
         if (oldCap > 0) {
-            if (oldCap >= MAXIMUM_CAPACITY) {
+            if (oldCap >= MAXIMUM_CAPACITY) {  //判断数字长度是否大于最大值
                 threshold = Integer.MAX_VALUE;
                 return oldTab;
             }
-            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY && //新的容量变为之前的两倍
+            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
                      oldCap >= DEFAULT_INITIAL_CAPACITY)
-                newThr = oldThr << 1; // double threshold
+                newThr = oldThr << 1; // double threshold 新的容量变为之前的两倍
         }
         else if (oldThr > 0) // initial capacity was placed in threshold
             newCap = oldThr;
@@ -701,31 +701,31 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         }
         threshold = newThr;
         @SuppressWarnings({"rawtypes","unchecked"})
-            Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+            Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];  //新的哈希桶
         table = newTab;
         if (oldTab != null) {
-            for (int j = 0; j < oldCap; ++j) {
+            for (int j = 0; j < oldCap; ++j) {  //遍历旧数据
                 Node<K,V> e;
                 if ((e = oldTab[j]) != null) {
-                    oldTab[j] = null;
-                    if (e.next == null)
-                        newTab[e.hash & (newCap - 1)] = e;
-                    else if (e instanceof TreeNode)
+                    oldTab[j] = null;  // 释放旧数据空间，不再指向任何对象
+                    if (e.next == null) // 当前哈希桶为空
+                        newTab[e.hash & (newCap - 1)] = e; //重新进行哈希位置索引，把e元素放到新的哈希桶中
+                    else if (e instanceof TreeNode)  //红黑树
                         ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
-                    else { // preserve order   保持顺序， 就是这里多线程不安全
+                    else { // preserve order   当前为链表结构，保持顺序， 就是这里多线程不安全
                         Node<K,V> loHead = null, loTail = null;  //低位链表
                         Node<K,V> hiHead = null, hiTail = null;  //高位链表
                         Node<K,V> next;
                         do {
                             next = e.next;
-                            if ((e.hash & oldCap) == 0) {
+                            if ((e.hash & oldCap) == 0) {  //索引位置不变
                                 if (loTail == null)
-                                    loHead = e;
+                                    loHead = e; //头结点
                                 else
                                     loTail.next = e;
                                 loTail = e;
                             }
-                            else {
+                            else {  //原索引位置+oldCap
                                 if (hiTail == null)
                                     hiHead = e;
                                 else
@@ -733,11 +733,11 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                                 hiTail = e;
                             }
                         } while ((e = next) != null);
-                        if (loTail != null) {
+                        if (loTail != null) {   //原索引放到哈希桶中
                             loTail.next = null;
                             newTab[j] = loHead;
                         }
-                        if (hiTail != null) {
+                        if (hiTail != null) {  //原索引+oldCap放到哈希桶中
                             hiTail.next = null;
                             newTab[j + oldCap] = hiHead;
                         }

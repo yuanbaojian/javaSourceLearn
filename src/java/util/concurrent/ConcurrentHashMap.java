@@ -1009,22 +1009,22 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     /** Implementation for put and putIfAbsent */
     final V putVal(K key, V value, boolean onlyIfAbsent) {
         if (key == null || value == null) throw new NullPointerException();
-        int hash = spread(key.hashCode());
-        int binCount = 0;
+        int hash = spread(key.hashCode()); //获取hash值
+        int binCount = 0; //记录链表长度
         for (Node<K,V>[] tab = table;;) {
             Node<K,V> f; int n, i, fh;
-            if (tab == null || (n = tab.length) == 0)
-                tab = initTable();
-            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
-                if (casTabAt(tab, i, null,
+            if (tab == null || (n = tab.length) == 0) //数组没有初始化
+                tab = initTable(); // 初始化数组（哈希桶）
+            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) { //当前数组[i]为空
+                if (casTabAt(tab, i, null,  //使用cas去put参数，如果失败继续自旋
                              new Node<K,V>(hash, key, value, null)))
                     break;                   // no lock when adding to empty bin
             }
-            else if ((fh = f.hash) == MOVED)
+            else if ((fh = f.hash) == MOVED) //有其他线程正在数组扩容，加入扩容
                 tab = helpTransfer(tab, f);
             else {
                 V oldVal = null;
-                synchronized (f) {
+                synchronized (f) {  //锁住当前链表头 || 红黑树头结点
                     if (tabAt(tab, i) == f) {
                         if (fh >= 0) {
                             binCount = 1;
