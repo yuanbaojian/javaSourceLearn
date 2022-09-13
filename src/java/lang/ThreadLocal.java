@@ -157,9 +157,12 @@ public class ThreadLocal<T> {
      * @return the current thread's value of this thread-local
      */
     public T get() {
+        //获得当前线程
         Thread t = Thread.currentThread();
+        //获得当前线程对应的ThreadLocalMap
         ThreadLocalMap map = getMap(t);
         if (map != null) {
+            //这个ThreadLocalMap中的key就是 threadLocal本身
             ThreadLocalMap.Entry e = map.getEntry(this);
             if (e != null) {
                 @SuppressWarnings("unchecked")
@@ -197,11 +200,15 @@ public class ThreadLocal<T> {
      *        this thread-local.
      */
     public void set(T value) {
+        //获得当前线程对象
         Thread t = Thread.currentThread();
+        //获得当前线程的ThreadLocalMap
         ThreadLocalMap map = getMap(t);
         if (map != null)
+            //ThreadLocalMap存在，则放入到对于的map中
             map.set(this, value);
         else
+            //需要创建ThreadLocalMap
             createMap(t, value);
     }
 
@@ -380,14 +387,16 @@ public class ThreadLocal<T> {
             Entry[] parentTable = parentMap.table;
             int len = parentTable.length;
             setThreshold(len);
+            //entry是ThreadLocal中的存储单元
             table = new Entry[len];
-
+            //遍历父类中的threadLocalMap对象
             for (int j = 0; j < len; j++) {
                 Entry e = parentTable[j];
                 if (e != null) {
                     @SuppressWarnings("unchecked")
                     ThreadLocal<Object> key = (ThreadLocal<Object>) e.get();
                     if (key != null) {
+                        //inheritableThreadLocal中改写了childValue方法
                         Object value = key.childValue(e.value);
                         Entry c = new Entry(key, value);
                         int h = key.threadLocalHashCode & (len - 1);

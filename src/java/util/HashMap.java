@@ -708,7 +708,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                 Node<K,V> e;
                 if ((e = oldTab[j]) != null) {
                     oldTab[j] = null;  // 释放旧数据空间，不再指向任何对象
-                    if (e.next == null) // 当前哈希桶为空
+                    if (e.next == null) // 当前哈希桶为只有一个元素
                         newTab[e.hash & (newCap - 1)] = e; //重新进行哈希位置索引，把e元素放到新的哈希桶中
                     else if (e instanceof TreeNode)  //红黑树
                         ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);

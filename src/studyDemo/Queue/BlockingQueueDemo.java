@@ -3,6 +3,7 @@ package studyDemo.Queue;
 
 import org.junit.Test;
 
+import java.util.PriorityQueue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,6 +17,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  **/
 public class BlockingQueueDemo {
     public static void main(String[] args) {
+
+        PriorityQueue queue = new PriorityQueue<Integer>();
+        queue.add(1);
         BlockingQueue blockingQueue = new ArrayBlockingQueue<>(3);
         boolean a = blockingQueue.add("a");
         System.out.println("a = " + a);

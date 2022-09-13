@@ -1021,7 +1021,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
                     break;                   // no lock when adding to empty bin
             }
             else if ((fh = f.hash) == MOVED) //有其他线程正在数组扩容，加入扩容
-                tab = helpTransfer(tab, f);
+                tab = helpTransfer(tab, f);  //当前put操作也去帮助扩容
             else {
                 V oldVal = null;
                 synchronized (f) {  //锁住当前链表头 || 红黑树头结点
@@ -2361,7 +2361,7 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
     }
 
     /**
-     * Moves and/or copies the nodes in each bin to new table. See
+     * Moves and/or copies the nodes in each bin to new table. See  扩容办法
      * above for explanation.
      */
     private final void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab) {

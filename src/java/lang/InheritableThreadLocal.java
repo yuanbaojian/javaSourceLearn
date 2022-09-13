@@ -57,6 +57,7 @@ public class InheritableThreadLocal<T> extends ThreadLocal<T> {
      *
      * @param parentValue the parent thread's value
      * @return the child thread's initial value
+     * 父线程创建子线程时，向子线程复制 InheritableThreadLocal<T> 变量时使用
      */
     protected T childValue(T parentValue) {
         return parentValue;

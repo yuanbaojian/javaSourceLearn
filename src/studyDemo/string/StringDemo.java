@@ -15,6 +15,13 @@ public class StringDemo {
     public static void main(String[] args) {
         String name1 = "hello";
         String name2 = "hello";
+        final String s = name1.toUpperCase();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("aa").append("bb");
+
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("cc").append("dd");
 
         name2.indexOf('3');
         boolean equals = name1.equals(name2);
